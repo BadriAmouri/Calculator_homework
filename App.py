@@ -3,7 +3,6 @@ from Addition import Addition
 from Substraction import Substraction
 from Multiplication import Multiplication
 from Division import Division
-
 app = Flask(__name__)
 
 def handle_invalid_input(error_message):
