@@ -1,39 +1,67 @@
 from flask import Flask, jsonify
 from Addition import Addition
-from Subtraction import Subtraction
+from Substraction import Substraction
 from Multiplication import Multiplication
 from Division import Division
 
 app = Flask(__name__)
 
-def handle_operation(operation, numA, numB):
+def handle_invalid_input(error_message):
+    return jsonify({'status': 400, 'error': error_message})
+
+@app.route('/add/<inputA>/<inputB>', methods=['GET'])
+def add(inputA, inputB):
     try:
+        numA = float(inputA)
+        numB = float(inputB)
+
+        operation = Addition()
         result = operation.compute(numA, numB)
         return jsonify({'status': 200, 'result': result})
+
+    except ValueError:
+        return handle_invalid_input("Invalid input: please provide numeric values.")
+
+@app.route('/minus/<inputA>/<inputB>', methods=['GET'])
+def subtract(inputA, inputB):
+    try:
+        numA = float(inputA)
+        numB = float(inputB)
+
+        operation = Substraction()
+        result = operation.compute(numA, numB)
+        return jsonify({'status': 200, 'result': result})
+
+    except ValueError:
+        return handle_invalid_input("Invalid input: please provide numeric values.")
+
+@app.route('/multiply/<inputA>/<inputB>', methods=['GET'])
+def multiply(inputA, inputB):
+    try:
+        numA = float(inputA)
+        numB = float(inputB)
+
+        operation = Multiplication()
+        result = operation.compute(numA, numB)
+        return jsonify({'status': 200, 'result': result})
+
+    except ValueError:
+        return handle_invalid_input("Invalid input: please provide numeric values.")
+
+@app.route('/divide/<inputA>/<inputB>', methods=['GET'])
+def divide(inputA, inputB):
+    try:
+        numA = float(inputA)
+        numB = float(inputB)
+
+        operation = Division()
+        result = operation.compute(numA, numB)
+        return jsonify({'status': 200, 'result': result})
+
+    except ValueError:
+        return handle_invalid_input("Invalid input: please provide numeric values.")
     except ZeroDivisionError as e:
         return jsonify({'status': 400, 'error': str(e)})
-    except Exception as e:  # Catch any other unexpected errors
-        return jsonify({'status': 500, 'error': 'An unexpected error occurred: ' + str(e)})
-
-@app.route('/add/<int:numA>/<int:numB>', methods=['GET'])
-def add(numA, numB):
-    operation = Addition()
-    return handle_operation(operation, numA, numB)
-
-@app.route('/minus/<int:numA>/<int:numB>', methods=['GET'])
-def subtract(numA, numB):
-    operation = Subtraction()
-    return handle_operation(operation, numA, numB)
-
-@app.route('/multiply/<int:numA>/<int:numB>', methods=['GET'])
-def multiply(numA, numB):
-    operation = Multiplication()
-    return handle_operation(operation, numA, numB)
-
-@app.route('/divide/<int:numA>/<int:numB>', methods=['GET'])
-def divide(numA, numB):
-    operation = Division()
-    return handle_operation(operation, numA, numB)
 
 if __name__ == '__main__':
     app.run(debug=True)
